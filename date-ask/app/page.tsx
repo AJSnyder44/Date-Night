@@ -6,26 +6,30 @@ import Background from "@/components/Background";
 import Celebration from "@/components/Celebration";
 import DateForm from "@/components/DateForm";
 import NoButton from "@/components/NoButton";
+import Wheel from "@/components/Wheel";
+import { DateIdea } from "@/lib/dates";
 
-type Step = "ask" | "celebrate" | "schedule";
+type Step = "ask" | "celebrate" | "wheel" | "schedule";
 
 export default function Home() {
   const [step, setStep] = useState<Step>("ask");
   const [escapes, setEscapes] = useState(0);
+  const [idea, setIdea] = useState<DateIdea | null>(null);
 
   useEffect(() => {
     if (step !== "celebrate") return;
-    const t = setTimeout(() => setStep("schedule"), 2000);
+    const t = setTimeout(() => setStep("wheel"), 1800);
     return () => clearTimeout(t);
   }, [step]);
 
   const yesScale = 1 + Math.min(escapes, 8) * 0.06;
+  const asking = step === "ask" || step === "celebrate";
 
   return (
     <main className="flex min-h-[100dvh] items-center justify-center px-4 py-10 text-center">
       <Background />
       <AnimatePresence mode="wait">
-        {step !== "schedule" ? (
+        {asking && (
           <motion.section key="ask" exit={{ opacity: 0, scale: 0.9 }} className="flex flex-col items-center">
             <motion.div
               animate={{ scale: [1, 1.15, 1] }}
@@ -58,9 +62,18 @@ export default function Home() {
               <NoButton onEscape={() => setEscapes((n) => n + 1)} />
             </div>
           </motion.section>
-        ) : (
-          <DateForm key="schedule" />
         )}
+        {step === "wheel" && (
+          <motion.div key="wheel" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}>
+            <Wheel
+              onConfirm={(i) => {
+                setIdea(i);
+                setStep("schedule");
+              }}
+            />
+          </motion.div>
+        )}
+        {step === "schedule" && idea && <DateForm key="schedule" idea={idea} />}
       </AnimatePresence>
       {step === "celebrate" && <Celebration />}
     </main>

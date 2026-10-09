@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body { height: 100%; }
+body {
+  font-family: var(--font-body), system-ui, sans-serif;
+  color: #4A0E2B;
+  background: linear-gradient(135deg, #FFE3EA, #FFC2D1, #FFD9C2, #FFB3C6);
+  background-size: 300% 300%;
+  animation: drift 18s ease-in-out infinite;
+  overflow-x: hidden;
+}
+@keyframes drift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+@media (prefers-reduced-motion: reduce) { body { animation: none; } }
+
+:focus-visible { outline: 3px solid #4A0E2B; outline-offset: 3px; border-radius: 9999px; }
+input:focus-visible, textarea:focus-visible { border-radius: 0.75rem; }

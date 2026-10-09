@@ -5,17 +5,18 @@ import { motion } from "framer-motion";
 import {
   DateDetails, downloadIcs, googleCalendarUrl, localDateString, outlookCalendarUrl, toStart,
 } from "@/lib/calendar";
+import { DateIdea } from "@/lib/dates";
 
 const field =
   "w-full rounded-xl border-2 border-rose-soft bg-white/80 px-4 py-3 text-base text-wine placeholder:text-wine/40 focus:border-rose focus:outline-none";
 const linkBtn = "rounded-full border-2 border-wine/30 px-4 py-2 text-sm font-medium hover:bg-white";
 
-export default function DateForm() {
+export default function DateForm({ idea }: { idea: DateIdea }) {
   const today = localDateString();
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [location, setLocation] = useState("");
-  const [note, setNote] = useState("");
+  const [note, setNote] = useState(idea.text);
   const [error, setError] = useState<string | null>(null);
   const [details, setDetails] = useState<DateDetails | null>(null);
 
@@ -38,7 +39,8 @@ export default function DateForm() {
       className="w-full max-w-md rounded-3xl bg-white/60 p-6 text-left shadow-xl shadow-rose/20 backdrop-blur-md sm:p-8"
     >
       <h1 className="font-display text-4xl font-semibold leading-tight sm:text-5xl">Yay! I can&apos;t wait! ❤️</h1>
-      <p className="mt-2 text-wine/70">Pick a time that works for you.</p>
+      <p className="mt-3 rounded-2xl bg-rose-soft/70 px-4 py-3 text-sm"><span aria-hidden className="mr-2 text-xl">{idea.emoji}</span>{idea.text}</p>
+      <p className="mt-3 text-wine/70">Now pick a day and time.</p>
 
       <form onSubmit={submit} noValidate className="mt-6 space-y-4">
         <div className="grid grid-cols-2 gap-3">
